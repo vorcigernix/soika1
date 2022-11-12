@@ -1,14 +1,13 @@
 import { parseUri } from "@walletconnect/utils";
 import Head from "next/head";
-import Image from "next/image";
 import { useState } from "react";
-import { signClient } from "../components/WalletConnectUtil";
 import QrReader from "../components/QrReader";
+import { createLegacySignClient } from '../utils/LegacyWalletConnectUtil';
+import { signClient } from "../utils/WalletConnectUtil";
 
 export default function Home() {
   const [uri, setUri] = useState("");
   const [loading, setLoading] = useState(false);
-
   async function onConnect(uri: string) {
     try {
       setLoading(true);
@@ -16,7 +15,7 @@ export default function Home() {
 
       // Route the provided URI to the v1 SignClient if URI version indicates it, else use v2.
       if (version === 1) {
-        console.log("fu, upgrade");
+        createLegacySignClient({ uri })
       } else {
         await signClient.pair({ uri });
       }

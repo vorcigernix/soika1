@@ -54,7 +54,6 @@ export default function QrReader({ onConnect }: IProps) {
                 showViewFinder={false}
                 onError={onError}
                 onScan={onScan}
-                style={{ width: "100%" }}
               />
             </div>
           </Fragment>
