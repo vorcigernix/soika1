@@ -24,12 +24,14 @@ export default function QrReader({ onConnect }: IProps) {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  function onError() {
+  function onError(e: any) {
+    console.log(e)
     setShow(false);
   }
 
   async function onScan(data: string | null) {
     if (data) {
+      console.log(data);
       await onConnect(data);
       setShow(false);
     }
