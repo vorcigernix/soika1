@@ -13,7 +13,7 @@ export default function Modal() {
 
   // Ensure proposal is defined
   if (!proposal) {
-    return <div>Missing proposal data</div>;
+    return <></>;
   }
 
   // Get required proposal data
@@ -23,7 +23,7 @@ export default function Modal() {
 
   return (
     <>
-      <div className="text-lg">
+      <div className="text-lg text-white">
         {chainId}
       </div>
       <div>
