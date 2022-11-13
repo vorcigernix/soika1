@@ -2,12 +2,13 @@ import { parseUri } from "@walletconnect/utils";
 import Head from "next/head";
 import { useState } from "react";
 import QrReader from "../components/QrReader";
-import { createLegacySignClient } from '../utils/LegacyWalletConnectUtil';
+import { createLegacySignClient } from "../utils/LegacyWalletConnectUtil";
 import { signClient } from "../utils/WalletConnectUtil";
 
 export default function Home() {
   const [uri, setUri] = useState("");
   const [loading, setLoading] = useState(false);
+  const [connected, setConnected] = useState(false);
   async function onConnect(uri: string) {
     try {
       setLoading(true);
@@ -15,13 +16,14 @@ export default function Home() {
 
       // Route the provided URI to the v1 SignClient if URI version indicates it, else use v2.
       if (version === 1) {
-        createLegacySignClient({ uri })
+        createLegacySignClient({ uri });
       } else {
         await signClient.pair({ uri });
       }
     } catch (err: unknown) {
       alert(err);
     } finally {
+      setConnected(true);
       setUri("");
       setLoading(false);
     }
@@ -34,7 +36,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="w-2/3 mx-auto">
+      <main className={`w-2/3 mx-auto ${connected && "hidden"}`}>
         <div className="max-w-lg p-4 shadow-md text-gray-100 mx-auto mt-6">
           <div className="space-y-4">
             <div className="space-y-2">
