@@ -13,8 +13,7 @@ export default function Modal() {
   >({});
   const hasSelected = selectedAccounts["eip155"]?.length;
   // Get proposal data and wallet address from store
-  const proposal =
-    ModalStore.state.data?.legacyProposal ||
+  const proposal = ModalStore.state.data?.legacyProposal ||
     ModalStore.state.data?.legacyCallRequestEvent;
   console.log("ModalStore.state: ", ModalStore.state);
   console.log("proposal: ", proposal);
@@ -33,7 +32,7 @@ export default function Modal() {
   function onSelectAccount(chain: string, account: string) {
     if (selectedAccounts[chain]?.includes(account)) {
       const newSelectedAccounts = selectedAccounts[chain]?.filter(
-        (a) => a !== account
+        (a) => a !== account,
       );
       setSelectedAccounts((prev) => ({
         ...prev,
@@ -69,27 +68,29 @@ export default function Modal() {
 
   const selectAccountAndConnectToDapp = () => (
     <>
-      <p className="text-xl font-medium text-center">
-        Address {url} requests connection on the Ethereum network.
+      <p className="font-medium text-center">
+        Select address for {url} requests on the Ethereum network.
       </p>
+      <div className="py-4">
       {eip155Addresses.map((address: string, index: number) => (
-        <div key={index}>
+        <div key={index} className="py-2">
           <input
             type="checkbox"
             id={`${index}`}
             onClick={() => onSelectAccount("eip155", address)}
           />
-          <label htmlFor={`${index}`} className="break-all">
+          <label htmlFor={`${index}`} className="break-all text-sm">
             {" "}
             {address}
           </label>
         </div>
       ))}
+      </div>
 
       <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-8">
         <button
-          className={`px-8 py-3 text-lg font-semibold rounded ${
-            hasSelected ? "bg-yellow-400" : "bg-gray-400"
+          className={`px-8 py-3 text-lg font-semibold rounded-lg ${
+            hasSelected ? "bg-[#2f5f5f] text-white" : "bg-white opacity-20"
           } text-gray-900`}
           onClick={onApprove}
           disabled={!hasSelected}
@@ -97,7 +98,7 @@ export default function Modal() {
           Okay
         </button>
         <button
-          className="px-8 py-3 text-lg font-normal border rounded bg-gray-100 text-gray-900 border-gray-300"
+          className="px-8 py-3 text-lg font-normal border rounded-lg bg-gray-100 text-gray-900 border-gray-300"
           onClick={onReject}
         >
           No way dude
@@ -106,32 +107,40 @@ export default function Modal() {
     </>
   );
 
-  const isConnectedToDapp =
-    view === "LegacySessionProposalModal" &&
+  const isConnectedToDapp = view === "LegacySessionProposalModal" &&
     !open &&
     selectAccountAndConnectToDapp();
 
   return (
-    <div className="text-lg text-white mt-12">
-      <section className="py-6 text-gray-50">
-        <div className="container mx-auto flex flex-col items-center justify-center p-4 space-y-8 md:p-10 md:px-24 xl:px-48">
-          <h1 className="text-5xl font-bold leading-none text-center">
-            {name}
-          </h1>
+    <>
+      <main className={`md:w-2/3  w-11/12 mx-auto`}>
+        <div className="max-w-lg border-2 border-white/20 text-gray-100 mx-auto mt-6 bg-gradient-to-tr from-[#2f5f5f] to-black/5 rounded-3xl">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex justify-center items-center w-full rounded-md h-72">
+                <img src={icons[0]} className="w-4 h-4 rounded mr-2" />
+                {name}
+              </div>
+            </div>
+            <div className="space-y-2 border-2 border-white bg-white flex flex-col p-5 rounded-3xl justify-center items-center text-center">
+                <h3 className=" text-black">
+                  {view === "LegacySessionProposalModal" &&
+                    open &&
+                    selectAccountAndConnectToDapp()}
+                </h3>
+              <div className="leading-snug text-gray-400">
+                {isConnectedToDapp && (
+                  <p className="text-xl font-medium text-center">Connected</p>
+                )}
 
-          {view === "LegacySessionProposalModal" &&
-            open &&
-            selectAccountAndConnectToDapp()}
-
-          {isConnectedToDapp && (
-            <p className="text-xl font-medium text-center">Connected</p>
-          )}
-
-          {view === "LegacySessionSendTransactionModal" && open && (
-            <LegacySessionSendTransactionModal />
-          )}
+                {view === "LegacySessionSendTransactionModal" && open && (
+                  <LegacySessionSendTransactionModal />
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
-    </div>
+      </main>
+    </>
   );
 }
