@@ -40,7 +40,7 @@ export default function Home() {
         <div className="max-w-lg p-4 shadow-md text-gray-100 mx-auto mt-6">
           <div className="space-y-4">
             <div className="space-y-2">
-              <div className="flex justify-center object-cover object-center w-full rounded-md h-72 bg-gray-500">
+              <div className="flex justify-center object-cover object-center w-full rounded-md h-72">
                 <QrReader onConnect={onConnect} />
               </div>
             </div>
