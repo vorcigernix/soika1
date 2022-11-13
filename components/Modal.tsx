@@ -21,7 +21,7 @@ export default function Modal() {
 
   // Ensure proposal is defined
   if (!proposal) {
-    return <div className="text-teal-50">pff</div>;
+    return <div className="text-teal-50"></div>;
   }
 
   // Get required proposal data
