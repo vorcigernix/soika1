@@ -76,7 +76,7 @@ export default function Modal() {
           {eip155Addresses.map((address: string, index: number) => (
             <div key={index}>
             <input type="checkbox" id={`${index}`} onClick={() => onSelectAccount("eip155", address)}/>
-            <label htmlFor={`${index}`}> {address}</label>
+            <label htmlFor={`${index}`} className="break-all"> {address}</label>
             </div>
           ))}
 
