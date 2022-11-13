@@ -8,8 +8,8 @@ export async function createSignClient(relayerRegionURL: string) {
     projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
     relayUrl: relayerRegionURL ?? process.env.NEXT_PUBLIC_RELAY_URL,
     metadata: {
-      name: 'React Wallet',
-      description: 'React Wallet for WalletConnect',
+      name: 'Soika',
+      description: '...',
       url: 'https://walletconnect.com/',
       icons: ['https://avatars.githubusercontent.com/u/37784886']
     }
