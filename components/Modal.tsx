@@ -48,6 +48,7 @@ export default function Modal() {
 
   async function onApprove() {
     if (proposal) {
+      console.log(selectedAccounts);
       legacySignClient.approveSession({
         accounts: selectedAccounts["eip155"],
         chainId: chainId ?? 1,

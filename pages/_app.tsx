@@ -19,6 +19,18 @@ export default function App({ Component, pageProps }: AppProps) {
   createLegacySignClient();
   return (
     <>
+      <header className="p-4 text-gray-100">
+        <div className="container flex justify-between h-16 mx-auto md:justify-center md:space-x-8">
+          <a
+            rel="noopener noreferrer"
+            href="#"
+            aria-label="Back to homepage"
+            className="flex items-center p-2"
+          >
+            <img src="soika.png" className="w-10 h-10 rounded-full" />
+          </a>
+        </div>
+      </header>
       <Component {...pageProps} />
       <Modal />
     </>
