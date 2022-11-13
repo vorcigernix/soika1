@@ -36,17 +36,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={`w-2/3 mx-auto ${connected && "hidden"}`}>
-        <div className="max-w-lg p-4 shadow-md text-gray-100 mx-auto mt-6">
+      <main className={`md:w-2/3  w-11/12 mx-auto ${connected && "hidden"}`}>
+        <div className="max-w-lg border-2 border-white/20 text-gray-100 mx-auto mt-6 bg-gradient-to-tr from-[#2f5f5f] to-black/5 rounded-3xl">
           <div className="space-y-4">
             <div className="space-y-2">
               <div className="flex justify-center object-cover object-center w-full rounded-md h-72">
                 <QrReader onConnect={onConnect} />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 border-2 border-white bg-white flex flex-col p-5 rounded-3xl justify-center items-center text-center">
               <a rel="noopener noreferrer" href="#" className="block">
-                <h3 className="text-xl font-semibold text-yellow-400">
+                <h3 className="text-xl font-semibold text-[#2f5f5f]">
                   Please scan the QR Code
                 </h3>
               </a>
