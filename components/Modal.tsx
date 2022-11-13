@@ -119,7 +119,7 @@ export default function Modal() {
           <div className="space-y-4">
             <div className="space-y-2">
               <div className="flex justify-center items-center w-full rounded-md h-72">
-                <img src={icons[0]} className="w-4 h-4 rounded mr-2" />
+                {icons && <img src={icons[0]} className="w-4 h-4 rounded mr-2" />}
                 {name}
               </div>
             </div>
