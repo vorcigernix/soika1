@@ -1,6 +1,8 @@
 import ModalStore from "../utils/ModalStore";
 import { useSnapshot } from "valtio";
 import { useState } from "react";
+import { legacySignClient } from "../utils/LegacyWalletConnectUtil";
+import { getSdkError } from "@walletconnect/utils";
 
 export default function Modal() {
   const { open, view } = useSnapshot(ModalStore.state);
@@ -13,13 +15,31 @@ export default function Modal() {
 
   // Ensure proposal is defined
   if (!proposal) {
-    return <div className="text-teal-50">there is no request</div>;
+    return <div className="text-teal-50"></div>;
   }
 
   // Get required proposal data
   const { id, params } = proposal;
   const [{ chainId, peerMeta }] = params;
   const { icons, name, url } = peerMeta;
+
+  async function onApprove() {
+    if (proposal) {
+      legacySignClient.approveSession({
+        accounts: selectedAccounts["eip155"],
+        chainId: chainId ?? 1,
+      });
+    }
+    ModalStore.close();
+  }
+
+  // Handle reject action
+  function onReject() {
+    if (proposal) {
+      legacySignClient.rejectSession(getSdkError("USER_REJECTED_METHODS"));
+    }
+    ModalStore.close();
+  }
 
   return (
     <div className="text-lg text-white">
@@ -32,10 +52,16 @@ export default function Modal() {
             Address {url} requests connection on the network {chainId}.
           </p>
           <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-8">
-            <button className="px-8 py-3 text-lg font-semibold rounded dark:bg-yellow-400 dark:text-gray-900">
+            <button
+              className="px-8 py-3 text-lg font-semibold rounded dark:bg-yellow-400 dark:text-gray-900"
+              onClick={onApprove}
+            >
               Okay
             </button>
-            <button className="px-8 py-3 text-lg font-normal border rounded dark:bg-gray-100 dark:text-gray-900 dark:border-gray-300">
+            <button
+              className="px-8 py-3 text-lg font-normal border rounded dark:bg-gray-100 dark:text-gray-900 dark:border-gray-300"
+              onClick={onReject}
+            >
               No way dude
             </button>
           </div>
