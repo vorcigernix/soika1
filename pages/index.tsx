@@ -1,14 +1,17 @@
 import { parseUri } from "@walletconnect/utils";
 import Head from "next/head";
 import { useState } from "react";
+import { useSnapshot } from "valtio";
 import QrReader from "../components/QrReader";
 import { createLegacySignClient } from "../utils/LegacyWalletConnectUtil";
+import ModalStore from "../utils/ModalStore";
 import { signClient } from "../utils/WalletConnectUtil";
 
 export default function Home() {
   const [uri, setUri] = useState("");
   const [loading, setLoading] = useState(false);
   const [connected, setConnected] = useState(false);
+  const { isConnected } = useSnapshot(ModalStore.state);
   async function onConnect(uri: string) {
     try {
       setLoading(true);
@@ -19,15 +22,17 @@ export default function Home() {
         createLegacySignClient({ uri });
       } else {
         await signClient.pair({ uri });
+        
       }
     } catch (err: unknown) {
       alert(err);
     } finally {
-      setConnected(true);
+      ModalStore.connect()
       setUri("");
       setLoading(false);
     }
   }
+
   return (
     <div>
       <Head>
@@ -36,7 +41,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={`md:w-2/3  w-11/12 mx-auto ${connected && "hidden"}`}>
+      <main className={`md:w-2/3  w-11/12 mx-auto ${isConnected && "hidden"}`}>
         <div className="max-w-lg border-2 border-white/20 text-gray-100 mx-auto mt-6 bg-gradient-to-tr from-[#2f5f5f] to-black/5 rounded-3xl">
           <div className="space-y-4">
             <div className="space-y-2">

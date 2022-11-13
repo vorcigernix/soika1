@@ -5,6 +5,7 @@ import { signClient } from '../utils/WalletConnectUtil'
 import { SignClientTypes } from '@walletconnect/types'
 import { useCallback, useEffect } from 'react'
 
+
 export default function useWalletConnectEventsManager(initialized: boolean) {
   /******************************************************************************
    * 1. Open session proposal modal for confirmation / rejection

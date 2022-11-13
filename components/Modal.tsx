@@ -7,7 +7,7 @@ import { eip155Addresses } from "../utils/EIP155WalletUtil";
 import LegacySessionSendTransactionModal from "../views/LegacySessionSendTransactionModal";
 
 export default function Modal() {
-  const { open, view } = useSnapshot(ModalStore.state);
+  const { open, view, isConnected } = useSnapshot(ModalStore.state);
   const [selectedAccounts, setSelectedAccounts] = useState<
     Record<string, string[]>
   >({});
@@ -15,8 +15,6 @@ export default function Modal() {
   // Get proposal data and wallet address from store
   const proposal = ModalStore.state.data?.legacyProposal ||
     ModalStore.state.data?.legacyCallRequestEvent;
-  console.log("ModalStore.state: ", ModalStore.state);
-  console.log("proposal: ", proposal);
 
   // Ensure proposal is defined
   if (!proposal) {
@@ -60,6 +58,9 @@ export default function Modal() {
 
   // Handle reject action
   function onReject() {
+    //@ts-ignore
+    // isConnected = true
+    ModalStore.disconnect()
     if (proposal) {
       legacySignClient.rejectSession(getSdkError("USER_REJECTED_METHODS"));
     }
@@ -108,10 +109,6 @@ export default function Modal() {
     </>
   );
 
-  const isConnectedToDapp = view === "LegacySessionProposalModal" &&
-    !open &&
-    selectAccountAndConnectToDapp();
-
   return (
     <>
       <main className={`md:w-2/3  w-11/12 mx-auto`}>
@@ -130,7 +127,7 @@ export default function Modal() {
                   selectAccountAndConnectToDapp()}
               </h3>
               <div className="leading-snug text-gray-400">
-                {isConnectedToDapp && (
+                {isConnected && (
                   <>
                     <p className="text-xl font-medium text-center text-black p-4">
                       Connected
