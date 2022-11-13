@@ -73,20 +73,19 @@ export default function Modal() {
         Select address for {url} requests on the Ethereum network.
       </p>
       <div className="py-4">
-        {eip155Addresses.map((address: string, index: number) => (
-          <div key={index} className="py-2">
-            <input
-              type="checkbox"
-              id={`${index}`}
-              onClick={() =>
-                onSelectAccount("eip155", address)}
-            />
-            <label htmlFor={`${index}`} className="break-all text-sm">
-              {" "}
-              {address}
-            </label>
-          </div>
-        ))}
+      {eip155Addresses.map((address: string, index: number) => (
+        <div key={index} className="py-2">
+          <input
+            type="checkbox"
+            id={`${index}`}
+            onClick={() => onSelectAccount("eip155", address)}
+          />
+          <label htmlFor={`${index}`} className="break-all text-sm">
+            {" "}
+            {address}
+          </label>
+        </div>
+      ))}
       </div>
 
       <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-8">
@@ -109,6 +108,10 @@ export default function Modal() {
     </>
   );
 
+  const isConnectedToDapp = view === "LegacySessionProposalModal" &&
+    !open &&
+    selectAccountAndConnectToDapp();
+
   return (
     <>
       <main className={`md:w-2/3  w-11/12 mx-auto`}>
@@ -121,19 +124,14 @@ export default function Modal() {
               </div>
             </div>
             <div className="space-y-2 border-2 border-white bg-white flex flex-col p-5 rounded-3xl justify-center items-center text-center">
-              <h3 className=" text-black">
-                {view === "LegacySessionProposalModal" &&
-                  open &&
-                  selectAccountAndConnectToDapp()}
-              </h3>
+                <h3 className=" text-black">
+                  {view === "LegacySessionProposalModal" &&
+                    open &&
+                    selectAccountAndConnectToDapp()}
+                </h3>
               <div className="leading-snug text-gray-400">
-                {isConnected && (
-                  <>
-                    <p className="text-xl font-medium text-center text-black p-4">
-                      Connected
-                    </p>
-                    <p>and waiting for the transaction to verify</p>
-                  </>
+                {isConnectedToDapp && (
+                  <p className="text-xl font-medium text-center">Connected</p>
                 )}
 
                 {view === "LegacySessionSendTransactionModal" && open && (
