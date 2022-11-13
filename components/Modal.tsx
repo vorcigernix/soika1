@@ -4,6 +4,7 @@ import { useState } from "react";
 import { legacySignClient } from "../utils/LegacyWalletConnectUtil";
 import { getSdkError } from "@walletconnect/utils";
 import { eip155Addresses } from "../utils/EIP155WalletUtil";
+import LegacySessionSendTransactionModal from "../views/LegacySessionSendTransactionModal";
 
 export default function Modal() {
   const { open, view } = useSnapshot(ModalStore.state);
@@ -12,21 +13,24 @@ export default function Modal() {
   >({});
   const hasSelected = selectedAccounts["eip155"]?.length;
   // Get proposal data and wallet address from store
-  const proposal = ModalStore.state.data?.legacyProposal;
+  const proposal =
+    ModalStore.state.data?.legacyProposal ||
+    ModalStore.state.data?.legacyCallRequestEvent;
+  console.log("ModalStore.state: ", ModalStore.state);
+  console.log("proposal: ", proposal);
 
   // Ensure proposal is defined
   if (!proposal) {
-    return <div className="text-teal-50"></div>;
+    return <div className="text-teal-50">pff</div>;
   }
 
   // Get required proposal data
   const { id, params } = proposal;
   const [{ chainId, peerMeta }] = params;
-  const { icons, name, url } = peerMeta;
+  const { icons, name, url } = peerMeta || {};
 
   // Add / remove address from EIP155 selection
   function onSelectAccount(chain: string, account: string) {
-    
     if (selectedAccounts[chain]?.includes(account)) {
       const newSelectedAccounts = selectedAccounts[chain]?.filter(
         (a) => a !== account
@@ -62,6 +66,50 @@ export default function Modal() {
     ModalStore.close();
   }
 
+  const selectAccountAndConnectToDapp = () => (
+    <>
+      <p className="text-xl font-medium text-center">
+        Address {url} requests connection on the Ethereum network.
+      </p>
+      {eip155Addresses.map((address: string, index: number) => (
+        <div key={index}>
+          <input
+            type="checkbox"
+            id={`${index}`}
+            onClick={() => onSelectAccount("eip155", address)}
+          />
+          <label htmlFor={`${index}`} className="break-all">
+            {" "}
+            {address}
+          </label>
+        </div>
+      ))}
+
+      <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-8">
+        <button
+          className={`px-8 py-3 text-lg font-semibold rounded ${
+            hasSelected ? "bg-yellow-400" : "bg-gray-400"
+          } text-gray-900`}
+          onClick={onApprove}
+          disabled={!hasSelected}
+        >
+          Okay
+        </button>
+        <button
+          className="px-8 py-3 text-lg font-normal border rounded bg-gray-100 text-gray-900 border-gray-300"
+          onClick={onReject}
+        >
+          No way dude
+        </button>
+      </div>
+    </>
+  );
+
+  const isConnectedToDapp =
+    view === "LegacySessionProposalModal" &&
+    !open &&
+    selectAccountAndConnectToDapp();
+
   return (
     <div className="text-lg text-white mt-12">
       <section className="py-6 text-gray-50">
@@ -69,33 +117,18 @@ export default function Modal() {
           <h1 className="text-5xl font-bold leading-none text-center">
             {name}
           </h1>
-          <p className="text-xl font-medium text-center">
-            Address {url} requests connection on the network {chainId}.
-          </p>
 
-          {eip155Addresses.map((address: string, index: number) => (
-            <div key={index}>
-            <input type="checkbox" id={`${index}`} onClick={() => onSelectAccount("eip155", address)}/>
-            <label htmlFor={`${index}`} className="break-all"> {address}</label>
-            </div>
-          ))}
+          {view === "LegacySessionProposalModal" &&
+            open &&
+            selectAccountAndConnectToDapp()}
 
-          <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-8">
-            <button
-              className={`px-8 py-3 text-lg font-semibold rounded ${hasSelected ?'bg-yellow-400' : 'bg-gray-400'} text-gray-900`}
-              onClick={onApprove}
-              disabled={!hasSelected}
-            >
-              Okay
-            </button>
-            <button
-              className="px-8 py-3 text-lg font-normal border rounded bg-gray-100 text-gray-900 border-gray-300"
-              onClick={onReject}
-            >
-              No way dude
-            </button>
-          </div>
-         
+          {isConnectedToDapp && (
+            <p className="text-xl font-medium text-center">Connected</p>
+          )}
+
+          {view === "LegacySessionSendTransactionModal" && open && (
+            <LegacySessionSendTransactionModal />
+          )}
         </div>
       </section>
     </div>

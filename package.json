@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@json-rpc-tools/utils": "^1.7.6",
     "@walletconnect/auth-client": "^1.0.1",
     "@walletconnect/client": "^1.8.0",
     "@walletconnect/legacy-types": "^2.0.0-rc.0",
