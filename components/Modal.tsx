@@ -3,13 +3,14 @@ import { useSnapshot } from "valtio";
 import { useState } from "react";
 import { legacySignClient } from "../utils/LegacyWalletConnectUtil";
 import { getSdkError } from "@walletconnect/utils";
+import { eip155Addresses } from "../utils/EIP155WalletUtil";
 
 export default function Modal() {
   const { open, view } = useSnapshot(ModalStore.state);
   const [selectedAccounts, setSelectedAccounts] = useState<
     Record<string, string[]>
   >({});
-  const hasSelected = Object.keys(selectedAccounts).length;
+  const hasSelected = selectedAccounts["eip155"]?.length;
   // Get proposal data and wallet address from store
   const proposal = ModalStore.state.data?.legacyProposal;
 
@@ -22,6 +23,26 @@ export default function Modal() {
   const { id, params } = proposal;
   const [{ chainId, peerMeta }] = params;
   const { icons, name, url } = peerMeta;
+
+  // Add / remove address from EIP155 selection
+  function onSelectAccount(chain: string, account: string) {
+    
+    if (selectedAccounts[chain]?.includes(account)) {
+      const newSelectedAccounts = selectedAccounts[chain]?.filter(
+        (a) => a !== account
+      );
+      setSelectedAccounts((prev) => ({
+        ...prev,
+        [chain]: newSelectedAccounts,
+      }));
+    } else {
+      const prevChainAddresses = selectedAccounts[chain] ?? [];
+      setSelectedAccounts((prev) => ({
+        ...prev,
+        [chain]: [...prevChainAddresses, account],
+      }));
+    }
+  }
 
   async function onApprove() {
     if (proposal) {
@@ -51,10 +72,19 @@ export default function Modal() {
           <p className="text-xl font-medium text-center">
             Address {url} requests connection on the network {chainId}.
           </p>
+
+          {eip155Addresses.map((address: string, index: number) => (
+            <div key={index}>
+            <input type="checkbox" id={`${index}`} onClick={() => onSelectAccount("eip155", address)}/>
+            <label htmlFor={`${index}`}> {address}</label>
+            </div>
+          ))}
+
           <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-8">
             <button
-              className="px-8 py-3 text-lg font-semibold rounded bg-yellow-400 text-gray-900"
+              className={`px-8 py-3 text-lg font-semibold rounded ${hasSelected ?'bg-yellow-400' : 'bg-gray-400'} text-gray-900`}
               onClick={onApprove}
+              disabled={!hasSelected}
             >
               Okay
             </button>
@@ -65,6 +95,7 @@ export default function Modal() {
               No way dude
             </button>
           </div>
+         
         </div>
       </section>
     </div>
