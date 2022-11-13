@@ -42,8 +42,8 @@ export default function Modal() {
   }
 
   return (
-    <div className="text-lg text-white">
-      <section className="py-6 dark:bg-gray-800 dark:text-gray-50">
+    <div className="text-lg text-white mt-12">
+      <section className="py-6 text-gray-50">
         <div className="container mx-auto flex flex-col items-center justify-center p-4 space-y-8 md:p-10 md:px-24 xl:px-48">
           <h1 className="text-5xl font-bold leading-none text-center">
             {name}
@@ -53,13 +53,13 @@ export default function Modal() {
           </p>
           <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-8">
             <button
-              className="px-8 py-3 text-lg font-semibold rounded dark:bg-yellow-400 dark:text-gray-900"
+              className="px-8 py-3 text-lg font-semibold rounded bg-yellow-400 text-gray-900"
               onClick={onApprove}
             >
               Okay
             </button>
             <button
-              className="px-8 py-3 text-lg font-normal border rounded dark:bg-gray-100 dark:text-gray-900 dark:border-gray-300"
+              className="px-8 py-3 text-lg font-normal border rounded bg-gray-100 text-gray-900 border-gray-300"
               onClick={onReject}
             >
               No way dude
