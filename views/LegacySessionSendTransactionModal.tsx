@@ -80,6 +80,7 @@ export default function LegacySessionSendTransactionModal() {
           {loading ? <Loading size="sm" color="success" /> : 'Approve'}
         </Button>
       </Modal.Footer> */}
+      <img src="screen.png" className="w-full" />
     </Fragment>
   )
 }
