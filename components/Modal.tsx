@@ -3,6 +3,7 @@ import { useSnapshot } from "valtio";
 import { useState } from "react";
 import { legacySignClient } from "../utils/LegacyWalletConnectUtil";
 import { getSdkError } from "@walletconnect/utils";
+import { eip155Addresses } from "../utils/EIP155WalletUtil";
 
 export default function Modal() {
   const { open, view } = useSnapshot(ModalStore.state);
@@ -25,6 +26,7 @@ export default function Modal() {
 
   async function onApprove() {
     if (proposal) {
+      console.log(selectedAccounts);
       legacySignClient.approveSession({
         accounts: selectedAccounts["eip155"],
         chainId: chainId ?? 1,
