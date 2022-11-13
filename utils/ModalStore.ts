@@ -34,7 +34,8 @@ interface State {
     | 'LegacySessionSignModal'
     | 'LegacySessionSignTypedDataModal'
     | 'LegacySessionSendTransactionModal'
-  data?: ModalData
+  data?: ModalData,
+  isConnected?: boolean
 }
 
 /**
@@ -54,6 +55,14 @@ const ModalStore = {
     state.view = view
     state.data = data
     state.open = true
+  },
+
+  disconnect() {
+    state.isConnected = false
+  },
+
+  connect() {
+    state.isConnected = true
   },
 
   close() {
